@@ -54,16 +54,35 @@ void insereHash (char* palavra){
 
 void removeHash (char* palavra){
 	short int flag=0;
+	Item* aux, aux2;
+	int n;
 
 	//novamente acha o N
 
-	while(hash[n]->proximo != NULL){
-		if(strcmp(hash[n]->palavra, palavra)==0){
-			has[n] = hash[n]->proximo;
-			flag = 1;
-		}	
+	aux=hash[n];
+
+	if (aux == NULL){
+		printf("Item a ser removido não existe, queridinha!");
+		return;
 	}
+
+	//para o caso de ser o primeiro
+	if(strcmp(aux->palavra, palavra)==0){
+		hash[n] = aux->proximo;
+		flag = 1;
+	} else {
+		while(aux->proximo != NULL){
+			aux2=aux;
+			aux=aux->proximo;
+
+			if(strcmp(aux->palavra, palavra)==0){
+				aux2->proximo=aux->proximo;
+				flag = 1;
+			}
+		}	
+	} 
+		
 	if(!flag){
-		printf("Nenhum item removido, Leti!");
+		printf("Item a ser removido não existe, queridinha!");
 	} 
 }
