@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int tamHash=10;
-Item* hash;
+Item *hash;
 
 struct Item {
 	char* palavra;
