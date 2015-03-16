@@ -1,21 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "TADLeDoc.h"
+#include "TADHashEnc.h"
+
 
 int n = 0;
 
 struct palavra{
 	char* palavra;
-	Palavra* proximo;
-}
-
-typedef struct palavra Palavra;
+	struct palavra* proximo;
+};
 
 struct listap{
 	Palavra* primeiro;
 	Palavra* ultimo;
-}
+};
 
-typedef struct listap ListaP;
 ListaP* lista;
 
 void initLista(){
@@ -47,15 +48,16 @@ int repetido(char* word){
 		if(strcmp(aux->palavra, word) == 0){
 			return 1;
 		}
+		aux=aux->proximo;
 	}
 
 	return 0;
 }
 
-void leArquivo(char *palavra, char *nomeArq){
+void leArquivo(char *nomeArq){
 	FILE *arq;
 	char ch;
-	char[30] word;
+	char word[30];
 	int posicao = 0;
 
 	arq = fopen(nomeArq, "r");
@@ -63,43 +65,26 @@ void leArquivo(char *palavra, char *nomeArq){
 		printf("Erro na leitura de arquivo, queridinha!");
 	} else{
 		Palavra* p;
-		//ler o arquivo ate que encontro a primeira letra de palavra, e entao compara
-		//se é a mesma palavra
-		//Problemas: como pego o primeiro elemento de um char*? acho que é assim:
-		while(fscanf(fp,"%s", word) == 1){
+		initLista();
+		while(fscanf(arq,"%s", word) == 1){
 			if(!repetido(word)){
 				insere(word);
 			}
 		}
-		// while((ch=fgetc(arq))!= EOF)){
-		// 	posicao++;
-
-		// 	if (ch == (*palavra)){ //(*palavra) retorna o primeiro char da palavra?
-		// 		int i=1;
-		// 		word[0]=ch;
-		// 		palavra++;
-
-		// 		for(i;fgetc(arq)!=EOF && i<strlen(*palavra);i++){
-		// 			word[i]=fgetc(arq);
-		// 			posicao++;
-		// 		}
-		// 			//ta, mas nao ta armazenado a palavra em lugar nenhum, 
-		// 			//e nem tem como eu saber que achou a palavra
-		// 		}
-		// 	}
 	}
 	fclose(arq);
 }
 
 void nmrPalavras(){
-	int i=0;
+	int i;
 	Palavra* aux = lista->primeiro;
 
-	for(i;aux != NULL; i++){
+	for(i=0;aux != NULL; i++){
 		aux=aux->proximo;
 	}
 
-	n = i;
+	printf("Numero de palavras %d", i);
+	define(i);
 }
 
 

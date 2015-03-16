@@ -1,25 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "TADHashEnc.h"
 
-int tamHash=10;
-Item *hash;
+int tamHash;
 
-struct Item {
+struct item {
 	char* palavra;
-	Item* proximo;
-}
+	struct item* proximo;
+};
+
+Item** hash;
+
 
 //PRECISA: funcao que calcula o melhor tamanho do tamHash, que por enquanto vai fixado
 
-void initHash (){
-	int i;
+void define(int i){
+	int j;
 
-	hash = (Item*)malloc(tamHash);
+	hash = (Item**)malloc(sizeof(Item*));
 
-	for(i=0; i<tamHash; i++){
-		hash[i] = NULL;
+	for(j=0;j<i;j++){
+		hash[j]=NULL;
 	}
 }
+
+// void initHash (){
+// 	int i;
+
+// 	//hash = (Item*)malloc(tamHash);
+
+// 	for(i=0; i<tamHash; i++){
+// 		hash[i] = NULL;
+// 	}
+// }
 
 Item* createItem (char* palavra){
 	Item* novo = (Item*)malloc(sizeof(Item));
@@ -44,17 +58,17 @@ void insereHash (char* palavra){
 	if(hash[n] == NULL){
 		hash[n] = createItem(palavra);
 	} else {
-		aux = has[n];
-		while (aux->prox != NULL){
+		aux = hash[n];
+		while (aux->proximo != NULL){
 			aux = aux->proximo;
 		}
-		aux->prox = createItem(palavra);
+		aux->proximo = createItem(palavra);
 	}
 }
 
 void removeHash (char* palavra){
 	short int flag=0;
-	Item* aux, aux2;
+	Item *aux, *aux2;
 	int n;
 
 	//novamente acha o N
