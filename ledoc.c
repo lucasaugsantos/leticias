@@ -7,8 +7,20 @@
 
 int n = 0;
 
+struct posicao {
+	int posicao;
+	struct posicao* proximo;
+}
+
+struct documento {
+	char* nomeDoc;
+	struct posicao* posicao;
+	struct documento* proximo;
+};
+
 struct palavra{
 	char* palavra;
+	struct documento* doc;
 	struct palavra* proximo;
 };
 
@@ -25,33 +37,67 @@ void initLista(){
 	lista->ultimo = NULL;
 }
 
-void insere(char* word){
+Posicao* criaPosix (int posicao){
+	Posicao* novo = (Posicao*)malloc(sizeof(Posicao));
+	novo->posicao = posicao;
+	novo->prox = NULL;
+	
+	return novo;
+}
+
+Documento* criaSDoc (char* nomeDoc, int posicao){
+	Documento* novo = (Documento*)malloc(sizeof(Documento));
+	novo->nomeDoc = (char*)malloc((strlen(nomeDoc)+1)*sizeof(char));
+	novo->posicao = criaPosix(posicao);
+	novo->proximo = NULL;
+	
+	return novo;
+}
+
+void criaPalavra(char* word, char* nomeDoc, int posicao){
 	if(lista->primeiro == NULL){
 		lista->primeiro = (Palavra*)malloc(sizeof(Palavra));
 		lista->primeiro->palavra = (char*)malloc((strlen(word)+1)*sizeof(char));
 		strcpy(lista->primeiro->palavra, word);
-		lista->primeiro->proximo=NULL;
+		
+		lista->primeiro->doc = criaSDoc(nomeDoc, posicao);
+		
 		lista->ultimo = lista->primeiro;
 	} else{
 		lista->ultimo->proximo = (Palavra*)malloc(sizeof(Palavra));
 		lista->ultimo = lista->ultimo->proximo;
 		lista->ultimo->palavra = (char*)malloc((strlen(word)+1)*sizeof(char));
 		strcpy(lista->ultimo->palavra, word);
+		
+		lista->ultimo->doc = criaSDoc(nomeDoc, posicao);
+		
 		lista->ultimo->proximo=NULL;
 	}
 }
 
-int repetido(char* word){
+void insere(char* word, char* nomeDoc, int posicao){
 	Palavra* aux = lista->primeiro;
 
 	while(aux != NULL){
 		if(strcmp(aux->palavra, word) == 0){
-			return 1;
+			Documento* aux2 = aux->doc;
+			
+			while(aux2 != NULL){
+				if(strcmp(aux2->nomeDoc, nomeDoc) == 0){
+					aux2->posicao = criaPosix(posicao);
+					return;
+				}
+				aux2 = aux2->proximo;
+			}
+			
+			aux2 = criaDoc(nomeDoc, posicao);
+			return;
 		}
 		aux=aux->proximo;
 	}
-
-	return 0;
+	
+	aux = criaPalavra(word, nomeDoc, posicao);
+	return;
 }
 
 void leArquivo(char *nomeArq){
@@ -67,9 +113,7 @@ void leArquivo(char *nomeArq){
 		Palavra* p;
 		initLista();
 		while(fscanf(arq,"%s", word) == 1){
-			if(!repetido(word)){
-				insere(word);
-			}
+			insere(word);	
 		}
 	}
 	fclose(arq);
