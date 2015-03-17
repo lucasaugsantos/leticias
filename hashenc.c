@@ -7,6 +7,7 @@ int tamHash;
 
 struct item {
 	char* palavra;
+	char* documento;
 	struct item* proximo;
 };
 
@@ -23,6 +24,8 @@ void define(int i){
 	for(j=0;j<i;j++){
 		hash[j]=NULL;
 	}
+	
+	tamHash = i;
 }
 
 // void initHash (){
@@ -35,12 +38,14 @@ void define(int i){
 // 	}
 // }
 
-Item* createItem (char* palavra){
+Item* createItem (char* palavra, char* documento, int posicao){
 	Item* novo = (Item*)malloc(sizeof(Item));
 	novo->palavra = (char*)malloc((strlen(palavra)+1)*sizeof(char));
 	strcpy(novo->palavra, palavra);
+	novo->documento = (char*)malloc((strlen(documento)+1)*sizeof(char));
+	strcpy(novo->documento, documento);
 	novo->proximo = NULL;
-
+	
 	return novo;
 }
 
